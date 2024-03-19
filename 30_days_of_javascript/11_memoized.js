@@ -1,21 +1,17 @@
 function memoize(fn) {
-  let called = [];
+  let called = {};
 
   return function (...args) {
+    let key = String(args);
 
-    for(let i = 0; i < called.length; i++) {
-      if(called[i].args !== args[i]) {
-
-        console.log(called[i]);
-        // return called[i].result;
-      }
+    if (key in called) {
+      return called[key];
     }
 
-    const result = fn(...args);
-    called.push({ args, result });
+    let result = fn(...args);
+    called[key] = result;
     return result;
   };
-
 }
 
 let callCount = 0;
@@ -24,5 +20,5 @@ const memoizedFn = memoize(function (a, b) {
   return a + b;
 });
 memoizedFn(2, 3); // 5
-memoizedFn(2, 4); // 5
+memoizedFn(2, 3); // 5
 console.log(callCount); // 1
